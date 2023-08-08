@@ -23,10 +23,11 @@
     /* Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*", "./dist/*", ""],
+      "~/*": ["./src/*", "./dist/*", ""],
       "components/*": ["src/components/*"],
       "types/*": ["src/types/*"],
-      "public/*": ["public/*"]
+      "public/*": ["public/*"],
+      "state/*": ["src/state/*"]
     }
   },
   "include": ["src"],
