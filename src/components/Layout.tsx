@@ -5,8 +5,14 @@ import Header from "components/Header";
 function Layout() {
   return (
     <Grid container justifyContent="center">
-      <Header />
-      <Outlet />
+      <Grid item container flexDirection="column" alignItems="center" xs={6}>
+        <Grid item>
+          <Header />
+        </Grid>
+        <Grid item>
+          <Outlet />
+        </Grid>
+      </Grid>
     </Grid>
   );
 }

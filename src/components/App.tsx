@@ -14,7 +14,7 @@ function App() {
             path="*"
             element={
               <Typography variant="h5" textAlign="center">
-                404 not found: {<Link to="/">Go back Home</Link>}
+                Page not found: {<Link to="/">Go back Home</Link>}
               </Typography>
             }
           />
