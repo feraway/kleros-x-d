@@ -9,11 +9,8 @@ function Layout() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  console.log("logger", { address, location, navigate });
-
   useEffect(() => {
     if (!address && pathname !== "/") {
-      console.log("logger redirecting");
       navigate("/");
     }
   }, [navigate, pathname, address]);
