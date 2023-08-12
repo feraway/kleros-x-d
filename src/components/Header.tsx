@@ -16,30 +16,35 @@ function Header() {
           {error && (
             <Typography variant="subtitle2">{error.message}</Typography>
           )}
-          {connectors.map((connector) => (
-            <Button
-              disabled={!connector.ready || !!address}
-              key={connector.id}
-              onClick={() => connect({ connector })}
-              size="small"
-            >
-              {`Connect ${connector.name}`}
-              {!connector.ready && " (unsupported)"}
-              {isLoading &&
-                connector.id === pendingConnector?.id &&
-                " (connecting)"}
-            </Button>
-          ))}
+          {connectors.map((connector) =>
+            !address ? (
+              <Button
+                disabled={!connector.ready || !!address}
+                key={connector.id}
+                onClick={() => connect({ connector })}
+                size="small"
+              >
+                {`Connect ${connector.name}`}
+                {!connector.ready && " (unsupported)"}
+                {isLoading &&
+                  connector.id === pendingConnector?.id &&
+                  " (connecting)"}
+              </Button>
+            ) : null
+          )}
           {address && (
-            <Button
-              size="small"
-              onClick={() => {
-                disconnect();
-              }}
-              color="error"
-            >
-              Disconnect
-            </Button>
+            <>
+              <Typography variant="subtitle2">{address}</Typography>
+              <Button
+                size="small"
+                onClick={() => {
+                  disconnect();
+                }}
+                color="error"
+              >
+                Disconnect Metamask
+              </Button>
+            </>
           )}
         </>
       </Grid>
