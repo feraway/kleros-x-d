@@ -3,11 +3,13 @@ import Typography from "@mui/material/Typography";
 import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
 import Layout from "components/Layout";
 import GameIntro from "components/GameIntro";
+import NewGame from "components/NewGame";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import StateContext from "state/StateContext";
+import { GameType } from "@types";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [goerli],
@@ -15,7 +17,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 );
 
 const config = createConfig({
-  autoConnect: false,
+  autoConnect: true,
   connectors: [
     new MetaMaskConnector({ chains, options: { shimDisconnect: true } }),
   ],
@@ -24,15 +26,16 @@ const config = createConfig({
 });
 
 function App() {
-  const [gameAddress, setGameAddress] = useState<string>();
+  const [games, setGames] = useState<GameType[]>([]);
+
   return (
-    <StateContext.Provider value={{ gameAddress, setGameAddress }}>
+    <StateContext.Provider value={{ games, setGames }}>
       <WagmiConfig config={config}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<GameIntro />} />
-              {/*  <Route path="games" element={<GameList />} /> */}
+              <Route path="newGame" element={<NewGame />} />
               <Route
                 path="*"
                 element={

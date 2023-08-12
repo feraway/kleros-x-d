@@ -1,12 +1,12 @@
 import { createContext } from "react";
-import { Address } from "wagmi";
+import { GameType } from "@types";
 
 export type StateContextType = {
-  gameAddress?: string;
-  setGameAddress: (address?: Address) => void;
+  setGames: (games: GameType[] | ((games: GameType[]) => GameType[])) => void;
+  games: GameType[];
 };
 
 export default createContext<StateContextType>({
-  gameAddress: undefined,
-  setGameAddress: () => undefined,
+  setGames: () => [],
+  games: [],
 });

@@ -25,9 +25,11 @@
     "paths": {
       "~/*": ["./src/*", "./dist/*", ""],
       "components/*": ["src/components/*"],
-      "types/*": ["src/types/*"],
+      "@types": ["src/types.ts"],
       "public/*": ["public/*"],
-      "state/*": ["src/state/*"]
+      "state/*": ["src/state/*"],
+      "abis/*": ["src/abis/*"],
+      "utils/*": ["src/utils/*"]
     }
   },
   "include": ["src"],
