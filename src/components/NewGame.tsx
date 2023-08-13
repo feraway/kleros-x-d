@@ -7,11 +7,8 @@ import {
   usePublicClient,
 } from "wagmi";
 import { goerli } from "wagmi/chains";
-import { parseUnits } from "viem";
-import {
-  Hex as HexType,
-  TransactionReceipt as TransactionReceiptType,
-} from "viem";
+import { parseUnits, isAddress } from "viem";
+import { Hex as HexType } from "viem";
 import { getWalletClient } from "@wagmi/core";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -55,11 +52,25 @@ function NewGame() {
     isLoading: isWaitingForContractDeployment,
   } = useWaitForTransaction({
     hash: contractTransactionHash as HexType,
-    onSuccess: (data: TransactionReceiptType) => {
+    onSuccess: (data) => {
+      if (!data.contractAddress) {
+        setContractDeploymentError(true);
+        return;
+      }
+      const game = { address: data.contractAddress, salt, move };
+
       setGames((games: GameType[]): GameType[] => {
-        if (!data.contractAddress) return games;
-        return [...games, { address: data.contractAddress, salt }];
+        return [...games, game];
       });
+
+      if (localStorageChecked) {
+        const localStorageGamesRaw = localStorage.getItem("games");
+        const localStorageGamesInit = localStorageGamesRaw
+          ? JSON.parse(localStorageGamesRaw)
+          : [];
+        const localStorageGames = [...localStorageGamesInit, game];
+        localStorage.setItem("games", JSON.stringify(localStorageGames));
+      }
     },
   });
 
@@ -155,7 +166,7 @@ function NewGame() {
           The salt to resolve the game after Player 2 posts their move is
         </Typography>
         <Typography>{salt}</Typography>
-        <Button component={Link} to="/">
+        <Button component={Link} to="/gameList">
           Go to Games Page
         </Button>
       </Grid>
@@ -209,6 +220,10 @@ function NewGame() {
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setPlayer2Address(event.target.value);
             }}
+            error={!isAddress(player2Address)}
+            helperText={
+              !isAddress(player2Address) && "Player 2 address is invalid"
+            }
           />
         </Grid>
         <Grid
@@ -227,7 +242,7 @@ function NewGame() {
             Commit Move {!move && "(please complete the steps)"}
           </Button>
           <Typography textAlign="center">
-            Save address and Salt on localstorage?
+            Save game info in localstorage?
           </Typography>
           <Checkbox
             checked={localStorageChecked}

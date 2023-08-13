@@ -5,6 +5,7 @@ import Layout from "components/Layout";
 import GameIntro from "components/GameIntro";
 import NewGame from "components/NewGame";
 import PlayerTwoMove from "components/PlayerTwoMove";
+import GameList from "components/GamesList";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
@@ -17,6 +18,11 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [publicProvider()]
 );
 
+function getInitialState() {
+  const games = localStorage.getItem("games");
+  return games ? JSON.parse(games) : [];
+}
+
 const config = createConfig({
   autoConnect: true,
   connectors: [
@@ -27,7 +33,7 @@ const config = createConfig({
 });
 
 function App() {
-  const [games, setGames] = useState<GameType[]>([]);
+  const [games, setGames] = useState<GameType[]>(getInitialState());
 
   return (
     <StateContext.Provider value={{ games, setGames }}>
@@ -37,6 +43,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<GameIntro />} />
               <Route path="newGame" element={<NewGame />} />
+              <Route path="gameList" element={<GameList />} />
               <Route
                 path="playerTwoMove/:gameAddress/:bet"
                 element={<PlayerTwoMove />}
