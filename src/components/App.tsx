@@ -4,6 +4,7 @@ import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
 import Layout from "components/Layout";
 import GameIntro from "components/GameIntro";
 import NewGame from "components/NewGame";
+import PlayerTwoMove from "components/PlayerTwoMove";
 import { WagmiConfig, createConfig, configureChains } from "wagmi";
 import { goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
@@ -36,6 +37,10 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<GameIntro />} />
               <Route path="newGame" element={<NewGame />} />
+              <Route
+                path="playerTwoMove/:gameAddress/:bet"
+                element={<PlayerTwoMove />}
+              />
               <Route
                 path="*"
                 element={

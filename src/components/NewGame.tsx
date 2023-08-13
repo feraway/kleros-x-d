@@ -7,6 +7,7 @@ import {
   usePublicClient,
 } from "wagmi";
 import { goerli } from "wagmi/chains";
+import { parseUnits } from "viem";
 import {
   Hex as HexType,
   TransactionReceipt as TransactionReceiptType,
@@ -18,10 +19,10 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
+import SelectMove from "components/SelectMove";
 import Hasher from "abis/Hasher";
 import RPSLS from "abis/RPSLS";
 import { customAlphabet } from "nanoid";
-import { MOVES } from "utils/constants";
 import { GameType } from "@types";
 import StateContext from "state/StateContext";
 
@@ -34,7 +35,7 @@ function NewGame() {
   const [localStorageChecked, setLocalStorageChecked] = useState(true);
   const [salt, setSalt] = useState<string>();
   const [player2Address, setPlayer2Address] = useState<string>("");
-  const [stake, setStake] = useState("0");
+  const [bet, setBet] = useState("0");
   const [isContractDeploying, setIsContractDeploying] = useState(false);
   const [contractDeploymentError, setContractDeploymentError] = useState(false);
   const [contractTransactionHash, setcontractTransactionHash] =
@@ -62,6 +63,23 @@ function NewGame() {
     },
   });
 
+  const loading =
+    isBalanceLoading ||
+    isContractDeploying ||
+    isWaitingForContractDeployment ||
+    !balance;
+
+  if (loading) {
+    return (
+      <Grid container alignItems="center" flexDirection="column">
+        <CircularProgress />
+        {(isContractDeploying || isWaitingForContractDeployment) && (
+          <Typography>"Deploying contract..."</Typography>
+        )}
+      </Grid>
+    );
+  }
+
   const commitMove = async () => {
     try {
       setIsContractDeploying(true);
@@ -80,6 +98,7 @@ function NewGame() {
         args: [playerOneMoveHash, player2Address],
         bytecode: `0x${RPSLS.bytecode}`,
         chain: goerli,
+        value: parseUnits(bet, balance?.decimals),
       });
 
       if (hash) {
@@ -95,21 +114,7 @@ function NewGame() {
     }
   };
 
-  const isStakeValid = Number(stake) <= Number(balance?.formatted);
-
-  const loading =
-    isBalanceLoading || isContractDeploying || isWaitingForContractDeployment;
-
-  if (loading) {
-    return (
-      <Grid container alignItems="center" flexDirection="column">
-        <CircularProgress />
-        {(isContractDeploying || isWaitingForContractDeployment) && (
-          <Typography>"Deploying contract..."</Typography>
-        )}
-      </Grid>
-    );
-  }
+  const isBetValid = Number(bet) <= Number(balance?.formatted);
 
   if (contractDeploymentError || isBalanceError) {
     return (
@@ -131,7 +136,7 @@ function NewGame() {
     );
   }
 
-  if (contractDeploymentData) {
+  if (contractDeploymentData && balance) {
     // TODO: Add copy buttons
     return (
       <Grid container alignItems="center" flexDirection="column">
@@ -139,9 +144,13 @@ function NewGame() {
           Your game was succesfully deployed!
         </Typography>
         <Typography variant="h6">
-          The contract address to give to Player 2
+          Please give this link to player two (if they take longer than five
+          minutes to post their move you can claim timeout and get your bet
+          back)
         </Typography>
-        <Typography>{contractDeploymentData.contractAddress}</Typography>
+        <Typography>{`${window.location.origin}/playerTwoMove/${
+          contractDeploymentData.contractAddress
+        }/${parseUnits(bet, balance.decimals).toString()}`}</Typography>
         <Typography variant="h6">
           The salt to resolve the game after Player 2 posts their move is
         </Typography>
@@ -158,18 +167,7 @@ function NewGame() {
       <Grid item xs={12}>
         <Typography variant="h6">Step 1: Choose your move</Typography>
       </Grid>
-      <Grid item container xs={12} justifyContent="space-evenly">
-        {MOVES.map(({ id, name }) => (
-          <Button
-            key={id}
-            onClick={() => setMove(id)}
-            color={move === id ? "success" : "primary"}
-            variant="contained"
-          >
-            {name}
-          </Button>
-        ))}
-      </Grid>
+      <SelectMove setMove={setMove} move={move} />
       <Grid item xs={12}>
         <Typography variant="h6">
           Step 2: Place your bet! (Player 2 will have to match it)
@@ -184,13 +182,13 @@ function NewGame() {
         >
           <TextField
             label="Bet"
-            value={stake}
+            value={bet}
             type="number"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setStake(event.target.value);
+              setBet(event.target.value);
             }}
-            error={!isStakeValid}
-            helperText={!isStakeValid && "Stake can't excede balance"}
+            error={!isBetValid}
+            helperText={!isBetValid && "Stake can't excede balance"}
           />
           <Typography>{`(Balance: ${balance?.formatted} Goerli${balance?.symbol})`}</Typography>
         </Grid>
