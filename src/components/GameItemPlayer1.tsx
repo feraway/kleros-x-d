@@ -16,6 +16,7 @@ import { GameType } from "@types";
 import RPSLS from "abis/RPSLS";
 import CircularProgress from "@mui/material/CircularProgress";
 import getTimeout from "utils/getTimeout";
+import CopyIcon from "./icons/CopyIcon";
 
 function checkResult(player: number, oponent: number) {
   if (player % 2 === oponent % 2) return player < oponent;
@@ -166,6 +167,10 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
     isStakeRefetching ||
     isPlayer2AddressLoading;
 
+  const gameUrl = `${
+    window.location.origin
+  }/playerTwoMove/${address}/${stakeRaw?.toString()}`;
+
   if (
     isPlayer2AddressError ||
     isPlayer2MoveError ||
@@ -298,6 +303,18 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
             )}
           </Grid>
         )}
+      </CardActions>
+      <CardActions>
+        <Grid container justifyContent="center">
+          <Button
+            endIcon={<CopyIcon />}
+            onClick={() => {
+              navigator.clipboard.writeText(gameUrl);
+            }}
+          >
+            Copy Game Url
+          </Button>
+        </Grid>
       </CardActions>
     </Card>
   );

@@ -26,6 +26,7 @@ import { customAlphabet } from "nanoid";
 import { GameType } from "@types";
 import StateContext from "state/StateContext";
 import { MOVES } from "utils/constants";
+import CopyIcon from "components/icons/CopyIcon";
 
 const nanoidOnlyNumbers = customAlphabet("1234567890", 18);
 
@@ -85,6 +86,13 @@ function NewGame() {
       }
     },
   });
+
+  const gameUrl =
+    !!contractDeploymentData && !!balance
+      ? `${window.location.origin}/playerTwoMove/${
+          contractDeploymentData.contractAddress
+        }/${parseUnits(bet, balance.decimals).toString()}`
+      : "";
 
   const loading =
     isBalanceLoading || isContractDeploying || isWaitingForContractDeployment;
@@ -176,16 +184,32 @@ function NewGame() {
             minutes to post their move you can claim timeout and get your bet
             back).
           </Typography>
-          <Typography gutterBottom textAlign="center" sx={{ marginTop: 3 }}>{`${
-            window.location.origin
-          }/playerTwoMove/${
-            contractDeploymentData.contractAddress
-          }/${parseUnits(bet, balance.decimals).toString()}`}</Typography>
+          <Typography gutterBottom textAlign="center" sx={{ marginTop: 3 }}>
+            {gameUrl}
+          </Typography>
+          <Button
+            endIcon={<CopyIcon />}
+            onClick={() => {
+              navigator.clipboard.writeText(gameUrl);
+            }}
+          >
+            Copy Game Url
+          </Button>
           <Divider />
-          <Typography sx={{ marginTop: 3 }} gutterBottom textAlign="center" variant="h6">
+          <Typography
+            sx={{ marginTop: 3 }}
+            gutterBottom
+            textAlign="center"
+            variant="h6"
+          >
             The contract address is
           </Typography>
-          <Typography gutterBottom variant="h6" textAlign="center" color="primary">
+          <Typography
+            gutterBottom
+            variant="h6"
+            textAlign="center"
+            color="primary"
+          >
             {contractDeploymentData.contractAddress}
           </Typography>
           <Typography variant="h6">

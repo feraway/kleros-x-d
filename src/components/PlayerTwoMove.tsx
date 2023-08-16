@@ -184,7 +184,7 @@ function PlayerTwoMove() {
 
   if (isPlaySuccess) {
     return (
-      <Grid container flexDirection="column" alignItems="center">
+      <Grid container flexDirection="column" alignItems="center" xs={10}>
         <Typography gutterBottom variant="h6">
           Player Two Move
         </Typography>
