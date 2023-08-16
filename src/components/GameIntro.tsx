@@ -51,10 +51,14 @@ function GameIntro() {
             <Typography>- Spock beats Scissors and Rock</Typography>
           </ListItem>
         </List>
-        <Typography variant="h6" textAlign="center" sx={{marginTop: 1, marginBottom: 1}}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          sx={{ marginTop: 1, marginBottom: 1 }}
+        >
           The game is played over the decentralized test Ethereum network
-          GoEarli. It requires two players with Metamask wallets and some
-          GoearliETH.
+          Goerli. It requires two players with Metamask wallets and some
+          GoerliETH.
         </Typography>
         <Typography variant="h6" sx={{ textDecoration: "underline" }}>
           How to Play:
