@@ -172,7 +172,6 @@ function NewGame() {
   }
 
   if (contractDeploymentData && balance) {
-    // TODO: Add copy buttons
     return (
       <Grid container justifyContent="center">
         <Grid container alignItems="center" flexDirection="column" item lg={8}>
