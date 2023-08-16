@@ -1,6 +1,8 @@
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import { useConnect, useAccount, useDisconnect } from "wagmi";
 
 function Header() {
@@ -10,7 +12,7 @@ function Header() {
   const { disconnect } = useDisconnect();
 
   return (
-    <Grid container>
+    <Grid container sx={{ marginBottom: 3 }}>
       <Grid item container justifyContent="flex-end">
         <>
           {error && (
@@ -33,7 +35,7 @@ function Header() {
             ) : null
           )}
           {address && (
-            <>
+            <Grid container alignItems="center" justifyContent="flex-end">
               <Typography variant="subtitle2">{address}</Typography>
               <Button
                 size="small"
@@ -44,7 +46,7 @@ function Header() {
               >
                 Disconnect Metamask
               </Button>
-            </>
+            </Grid>
           )}
         </>
       </Grid>
@@ -52,6 +54,17 @@ function Header() {
         <Typography variant="h1" textAlign="center">
           RPSLS
         </Typography>
+      </Grid>
+      <Grid item container xs={12} justifyContent="center">
+        <Button component={Link} to="/newGame">
+          New Game
+        </Button>
+        <Button component={Link} to="/gameList" sx={{ marginLeft: 3 }}>
+          Game List
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
       </Grid>
     </Grid>
   );
