@@ -11,7 +11,11 @@ function Layout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ((!address || chain?.id !== 5) && pathname !== "/") {
+    if (
+      (!address || chain?.id !== 5) &&
+      pathname !== "/" &&
+      !pathname.includes("/playerTwoMove")
+    ) {
       navigate("/");
     }
   }, [navigate, pathname, address, chain]);

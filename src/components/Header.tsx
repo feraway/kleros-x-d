@@ -10,48 +10,22 @@ import {
   useNetwork,
   useSwitchNetwork,
 } from "wagmi";
+import ConnectWalletButton from "components/ConnectWalletButton";
+import SwitchNetworkButton from "components/SwitchNetworkButton";
 
 function Header() {
-  const {
-    connect,
-    connectors,
-    error: connectError,
-    isLoading: isConnectLoading,
-    pendingConnector,
-  } = useConnect();
+  const { error: connectError } = useConnect();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
   const { chain } = useNetwork();
-  const {
-    chains,
-    error: switchNetworkError,
-    isLoading: isSwitchNetworkLoading,
-    pendingChainId,
-    switchNetwork,
-  } = useSwitchNetwork();
+  const { error: switchNetworkError } = useSwitchNetwork();
 
   const error = connectError || switchNetworkError;
-  const isLoading = isConnectLoading || isSwitchNetworkLoading;
   return (
     <Grid container sx={{ marginBottom: 3 }}>
       <Grid item container justifyContent="flex-end">
         {error && <Typography variant="subtitle2">{error.message}</Typography>}
-        {connectors.map((connector) =>
-          !address ? (
-            <Button
-              disabled={!connector.ready || !!address}
-              key={connector.id}
-              onClick={() => connect({ connector })}
-              size="small"
-            >
-              {`Connect ${connector.name}`}
-              {!connector.ready && " (unsupported)"}
-              {isLoading &&
-                connector.id === pendingConnector?.id &&
-                " (connecting)"}
-            </Button>
-          ) : null
-        )}
+        {!address && <ConnectWalletButton />}
         {address && (
           <Grid
             container
@@ -72,22 +46,7 @@ function Header() {
             </Button>
           </Grid>
         )}
-        {address &&
-          chain?.id !== 5 &&
-          chains.map((x) => (
-            <Button
-              size="small"
-              color="primary"
-              variant="contained"
-              disabled={!switchNetwork || x.id === chain?.id}
-              key={x.id}
-              onClick={() => switchNetwork?.(x.id)}
-            >
-              {"Switch to "}
-              {x.name}
-              {isLoading && pendingChainId === x.id && " (switching)"}
-            </Button>
-          ))}
+        {address && chain?.id !== 5 && <SwitchNetworkButton />}
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h1" textAlign="center">

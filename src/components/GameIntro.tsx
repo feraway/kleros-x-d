@@ -1,28 +1,16 @@
 import { Link } from "react-router-dom";
+import { useAccount, useNetwork } from "wagmi";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Button from "@mui/material/Button";
-import { useConnect, useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import ConenctWalletButton from "components/ConnectWalletButton";
+import SwitchNetworkButton from "components/SwitchNetworkButton";
 
 function GameIntro() {
-  const {
-    connect,
-    connectors,
-    isLoading: isLoadingConnect,
-    pendingConnector,
-  } = useConnect();
   const { chain } = useNetwork();
   const { address } = useAccount();
-  const {
-    chains,
-    isLoading: isSwitchNetworkLoading,
-    pendingChainId,
-    switchNetwork,
-  } = useSwitchNetwork();
-
-  const isLoading = isLoadingConnect || isSwitchNetworkLoading;
 
   return (
     <Grid container item xs={10} spacing={1}>
@@ -129,53 +117,28 @@ function GameIntro() {
           <Typography>To start, please connect your Metamask Wallet</Typography>
         )}
       </Grid>
-      <Grid container justifyContent="center" item xs={12}>
-        {!address &&
-          connectors.map((connector) => (
-            <Button
-              disabled={!connector.ready || !!address}
-              key={connector.id}
-              onClick={() => connect({ connector })}
-              size="small"
-            >
-              {`Connect ${connector.name}`}
-              {!connector.ready && " (unsupported)"}
-              {isLoading &&
-                connector.id === pendingConnector?.id &&
-                " (connecting)"}
-            </Button>
-          ))}
-      </Grid>
-      <Grid container justifyContent="center" item xs={12}>
-        {address && chain?.id !== 5 && (
+      {!address && (
+        <Grid container justifyContent="center" item xs={12}>
+          <ConenctWalletButton />
+        </Grid>
+      )}
+      {address && chain?.id !== 5 && (
+        <Grid container justifyContent="center" item xs={12}>
           <Typography>Please Switch Network to Goerli</Typography>
-        )}
-      </Grid>
-      <Grid container justifyContent="center" item xs={12}>
-        {address &&
-          chain?.id !== 5 &&
-          chains.map((x) => (
-            <Button
-              size="small"
-              color="primary"
-              variant="contained"
-              disabled={!switchNetwork || x.id === chain?.id}
-              key={x.id}
-              onClick={() => switchNetwork?.(x.id)}
-            >
-              {"Switch to "}
-              {x.name}
-              {isLoading && pendingChainId === x.id && " (switching)"}
-            </Button>
-          ))}
-      </Grid>
-      <Grid container justifyContent="center" item xs={12}>
-        {address && chain?.id === 5 && (
+        </Grid>
+      )}
+      {address && chain?.id !== 5 && (
+        <Grid container justifyContent="center" item xs={12}>
+          <SwitchNetworkButton />
+        </Grid>
+      )}
+      {address && chain?.id === 5 && (
+        <Grid container justifyContent="center" item xs={12}>
           <Button component={Link} to="newGame" variant="contained">
             Create a new game
           </Button>
-        )}
-      </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 }

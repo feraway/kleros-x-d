@@ -7,6 +7,7 @@ import {
   useContractWrite,
   Address,
   useContractRead,
+  useNetwork,
 } from "wagmi";
 import { formatUnits } from "viem";
 import uniqBy from "lodash.uniqby";
@@ -16,6 +17,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import SelectMove from "components/SelectMove";
 import StateContext from "state/StateContext";
+import ConnectWalletButton from "components/ConnectWalletButton";
+import SwitchNetworkButton from "components/SwitchNetworkButton";
 import { GameType } from "@types";
 import RPSLS from "abis/RPSLS";
 
@@ -24,6 +27,7 @@ function PlayerTwoMove() {
   const [move, setMove] = useState<number>(0);
   const { address } = useAccount();
   const { setGames } = useContext(StateContext);
+  const { chain } = useNetwork();
 
   const {
     data: balance,
@@ -148,7 +152,7 @@ function PlayerTwoMove() {
     );
   }
 
-  if (player2Address !== address) {
+  if (player2Address !== address || chain?.id !== 5) {
     return (
       <Grid container flexDirection="column" alignItems="center">
         <Typography gutterBottom variant="h6">
@@ -157,17 +161,34 @@ function PlayerTwoMove() {
         <Typography
           gutterBottom
         >{`You are playing the game with address: ${gameAddress}`}</Typography>
-        <Typography gutterBottom>
-          This game doesn't belong to the connected wallet.
-        </Typography>
-        <Button
-          sx={{ marginTop: 3 }}
-          component={Link}
-          to="/"
-          variant="contained"
-        >
-          Go Home
-        </Button>
+        {address && chain?.id === 5 && (
+          <Typography gutterBottom>
+            This game doesn't belong to the connected wallet.
+          </Typography>
+        )}
+        {address && chain?.id === 5 && (
+          <Button
+            sx={{ marginTop: 3 }}
+            component={Link}
+            to="/"
+            variant="contained"
+          >
+            Go Home
+          </Button>
+        )}
+        {!address && (
+          <Typography gutterBottom>
+            Your Metamask wallet is not connected
+          </Typography>
+        )}
+        {!address && <ConnectWalletButton />}
+
+        {address && chain?.id !== 5 && (
+          <Typography gutterBottom>
+            Please switch your network to Goerli
+          </Typography>
+        )}
+        {address && chain?.id !== 5 && <SwitchNetworkButton />}
       </Grid>
     );
   }
