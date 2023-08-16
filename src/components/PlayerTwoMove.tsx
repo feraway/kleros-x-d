@@ -46,6 +46,16 @@ function PlayerTwoMove() {
   });
 
   const {
+    data: player2Address,
+    isLoading: isPlayer2AddressLoading,
+    isError: isPlayer2AddressError,
+  } = useContractRead({
+    address: gameAddress as Address,
+    abi: RPSLS.abi,
+    functionName: "j2",
+  });
+
+  const {
     data: stake,
     isLoading: isStakeLoading,
     isError: isStakeError,
@@ -107,13 +117,15 @@ function PlayerTwoMove() {
     isBalanceLoading ||
     isStakeLoading ||
     isMoveLoading ||
-    isPlayer1AddressLoading;
+    isPlayer1AddressLoading ||
+    isPlayer2AddressLoading;
 
   const isError =
     isBalanceError ||
     isStakeError ||
     isPlayer2MoveError ||
-    isPlayer1AddressError;
+    isPlayer1AddressError ||
+    isPlayer2AddressError;
 
   if (isError) {
     return (
@@ -132,6 +144,30 @@ function PlayerTwoMove() {
     return (
       <Grid container alignItems="center" flexDirection="column">
         <CircularProgress />
+      </Grid>
+    );
+  }
+
+  if (player2Address !== address) {
+    return (
+      <Grid container flexDirection="column" alignItems="center">
+        <Typography gutterBottom variant="h6">
+          Player Two Move
+        </Typography>
+        <Typography
+          gutterBottom
+        >{`You are playing the game with address: ${gameAddress}`}</Typography>
+        <Typography gutterBottom>
+          This game doesn't belong to the connected wallet.
+        </Typography>
+        <Button
+          sx={{ marginTop: 3 }}
+          component={Link}
+          to="/"
+          variant="contained"
+        >
+          Go Home
+        </Button>
       </Grid>
     );
   }
