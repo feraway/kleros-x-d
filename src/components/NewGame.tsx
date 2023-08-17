@@ -174,7 +174,7 @@ function NewGame() {
   if (contractDeploymentData && balance) {
     return (
       <Grid container justifyContent="center">
-        <Grid container alignItems="center" flexDirection="column" item lg={8}>
+        <Grid container justifyContent="center" item lg={8}>
           <Typography gutterBottom textAlign="center" variant="h6">
             Your game was succesfully deployed!
           </Typography>
@@ -186,23 +186,26 @@ function NewGame() {
           <Typography gutterBottom textAlign="center" sx={{ marginTop: 3 }}>
             {gameUrl}
           </Typography>
-          <Button
-            endIcon={<CopyIcon />}
-            onClick={() => {
-              navigator.clipboard.writeText(gameUrl);
-            }}
-          >
-            Copy Game Url
-          </Button>
-          <Divider />
-          <Typography
-            sx={{ marginTop: 3 }}
-            gutterBottom
-            textAlign="center"
-            variant="h6"
-          >
-            The contract address is
-          </Typography>
+          <Grid item container xs={12} justifyContent="center">
+            <Button
+              endIcon={<CopyIcon />}
+              onClick={() => {
+                navigator.clipboard.writeText(gameUrl);
+              }}
+            >
+              Copy Game Url
+            </Button>
+          </Grid>
+          <Grid item container xs={12} justifyContent="center">
+            <Typography
+              sx={{ marginTop: 3 }}
+              gutterBottom
+              textAlign="center"
+              variant="h6"
+            >
+              The contract address is
+            </Typography>
+          </Grid>
           <Typography
             gutterBottom
             variant="h6"
@@ -211,17 +214,23 @@ function NewGame() {
           >
             {contractDeploymentData.contractAddress}
           </Typography>
-          <Typography variant="h6">
+          <Typography
+            variant="h6"
+            textAlign="center"
+            sx={{ marginTop: 1, marginBottom: 1 }}
+          >
             Make sure to save all this information somewhere safe, specially if
-            you're not storing it in localStorage. Loosing the salt will result
+            you're not storing it in localStorage. Losing the salt will result
             in the game being unsolvable.
           </Typography>
           <Typography gutterBottom variant="h6">
             The salt to resolve the game after Player 2 posts their move is
           </Typography>
-          <Typography gutterBottom variant="h6" color="primary">
-            {salt}
-          </Typography>
+          <Grid item container xs={12} justifyContent="center">
+            <Typography gutterBottom variant="h6" color="primary">
+              {salt}
+            </Typography>
+          </Grid>
           <Typography gutterBottom variant="h6">
             Your move was{" "}
             {
@@ -235,27 +244,31 @@ function NewGame() {
               </Typography>
             }
           </Typography>
-          <Button
-            component={Link}
-            to="/gameList"
-            sx={{ marginBottom: 3, marginTop: 3 }}
-          >
-            Go to Games Page
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setMove(0);
-              setSalt("");
-              setPlayer2Address("");
-              setBet("0");
-              setIsContractDeploying(false);
-              setContractDeploymentError(false);
-              setcontractTransactionHash("");
-            }}
-          >
-            Create New Game
-          </Button>
+          <Grid item xs={12} container justifyContent="center">
+            <Button
+              component={Link}
+              to="/gameList"
+              sx={{ marginBottom: 3, marginTop: 3 }}
+            >
+              Go to Games Page
+            </Button>
+          </Grid>
+          <Grid item xs={12} container justifyContent="center">
+            <Button
+              variant="contained"
+              onClick={() => {
+                setMove(0);
+                setSalt("");
+                setPlayer2Address("");
+                setBet("0");
+                setIsContractDeploying(false);
+                setContractDeploymentError(false);
+                setcontractTransactionHash("");
+              }}
+            >
+              Create New Game
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     );

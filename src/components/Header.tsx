@@ -32,7 +32,7 @@ function Header() {
             item
             alignItems="center"
             justifyContent="flex-end"
-            xs={6}
+            xs={12}
           >
             <Typography variant="subtitle2">{address}</Typography>
             <Button
@@ -44,9 +44,9 @@ function Header() {
             >
               Disconnect Metamask
             </Button>
+            {address && chain?.id !== 5 && <SwitchNetworkButton />}
           </Grid>
         )}
-        {address && chain?.id !== 5 && <SwitchNetworkButton />}
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h1" textAlign="center">

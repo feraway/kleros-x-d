@@ -184,6 +184,9 @@ function GameItemPlayer2(props: GameItemPlayer2Props) {
           <Typography
             gutterBottom
           >{`Game Address: ${game.address}`}</Typography>
+          <Typography
+            gutterBottom
+          >{`Playing against: ${player1Address}`}</Typography>
           <Typography gutterBottom variant="h6">
             Game Over
           </Typography>
@@ -203,9 +206,11 @@ function GameItemPlayer2(props: GameItemPlayer2Props) {
           gutterBottom
         >{`Playing against: ${player1Address}`}</Typography>
         <Typography gutterBottom>You are Player 2 in this game</Typography>
-        <Typography
-          gutterBottom
-        >{`Timeout will be available: ${timeOutDate?.toLocaleString()}`}</Typography>
+        {!hasTimedOut && (
+          <Typography
+            gutterBottom
+          >{`Timeout will be available: ${timeOutDate?.toLocaleString()}`}</Typography>
+        )}
         <Typography gutterBottom>{`Stake: ${stake}`}</Typography>
         {!isGameOver && !player2Move && (
           <Grid container justifyContent="center">
@@ -229,7 +234,7 @@ function GameItemPlayer2(props: GameItemPlayer2Props) {
       <CardActions>
         {isLoading ? (
           <Grid item container xs={12} justifyContent="center">
-            <CircularProgress />
+            <CircularProgress size={31} />
           </Grid>
         ) : (
           <Grid container justifyContent="space-evenly">

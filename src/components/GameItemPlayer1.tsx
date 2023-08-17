@@ -17,6 +17,7 @@ import RPSLS from "abis/RPSLS";
 import CircularProgress from "@mui/material/CircularProgress";
 import getTimeout from "utils/getTimeout";
 import CopyIcon from "./icons/CopyIcon";
+import { MOVES } from "utils/constants";
 
 function checkResult(player: number, oponent: number) {
   if (player % 2 === oponent % 2) return player < oponent;
@@ -207,7 +208,7 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
           >{`Game Address: ${game.address}`}</Typography>
           <Typography gutterBottom>You are Player 1 in this game</Typography>
           <Typography gutterBottom variant="h6">
-            Game Timed Out
+            Game Over
           </Typography>
           {isPlayer2TimeoutSuccess && (
             <Typography gutterBottom>
@@ -227,11 +228,16 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
           <Typography>{`Game Address: ${game.address}`}</Typography>
           <Typography>{`Playing against: ${player2Address}`}</Typography>
           <Typography gutterBottom>You are Player 1 in this game</Typography>
-          <Typography variant="h6">Game Over</Typography>
+          <Typography gutterBottom>{`Player 2 Played ${
+            MOVES.find((m) => m.id === player2Move)?.name
+          }`}</Typography>
+          <Typography gutterBottom variant="h6">
+            Game Over
+          </Typography>
           {move === player2Move ? (
-            <Typography>Tie</Typography>
+            <Typography variant="h6">Tie</Typography>
           ) : (
-            <Typography> You {winner ? "Won" : "Lost"}</Typography>
+            <Typography variant="h6"> You {winner ? "Won" : "Lost"}</Typography>
           )}
         </CardContent>
       </Card>
@@ -246,9 +252,11 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
           gutterBottom
         >{`Playing against: ${player2Address}`}</Typography>
         <Typography gutterBottom>You are Player 1 in this game</Typography>
-        <Typography
-          gutterBottom
-        >{`Timeout will be available: ${timeOutDate?.toLocaleString()}`}</Typography>
+        {!hasTimedOut && (
+          <Typography
+            gutterBottom
+          >{`Timeout will be available: ${timeOutDate?.toLocaleString()}`}</Typography>
+        )}
         <Typography gutterBottom>Stake: {stake}</Typography>
         {!!player2Move && (
           <Grid container justifyContent="center">
@@ -279,7 +287,7 @@ function GameItemPlayer1(props: GameItemPlayer1Props) {
       <CardActions>
         {isLoading ? (
           <Grid item container xs={12} justifyContent="center">
-            <CircularProgress />
+            <CircularProgress size={31} />
           </Grid>
         ) : (
           <Grid container justifyContent="space-evenly">
